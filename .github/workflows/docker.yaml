@@ -1,0 +1,14 @@
+on:
+  workflow_call:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Docker login, build, push
+      run: |
+        echo github.event_name ${{ github.event_name }}
+        echo github.event.pull_request.head.sha ${{ github.event.pull_request.head.sha }}
+        echo GITHUB_SHA $GITHUB_SHA
+        echo GITHUB_REPOSITORY $GITHUB_REPOSITORY
+        echo GITHUB_HEAD_REF $GITHUB_HEAD_REF
