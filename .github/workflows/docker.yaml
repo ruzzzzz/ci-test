@@ -6,17 +6,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - name: Set variables for non-PR triggers
-      if: github.event_name != 'pull_request'
-      run: |
-        echo "COMMIT_SHA=$GITHUB_SHA" >> $GITHUB_ENV 
-        echo "BRANCH=$GITHUB_REF_NAME" >> $GITHUB_ENV
+    # - name: Set variables for release triggers
+    #   run: |
+    #     echo ${{ github.event_name }}
 
-    - name: Set variables for PR triggers
-      if: github.event_name == 'pull_request'
-      run: |
-        echo "COMMIT_SHA=${{ github.event.pull_request.head.sha }}" >> $GITHUB_ENV
-        echo "BRANCH=$GITHUB_HEAD_REF" >> $GITHUB_ENV
+    # - name: Set variables for push triggers
+    #   if: github.event_name == 'push'
+    #   run: |
+    #     echo "COMMIT_SHA=$GITHUB_SHA" >> $GITHUB_ENV 
+    #     echo "BRANCH=$GITHUB_REF_NAME" >> $GITHUB_ENV
+
+    # - name: Set variables for PR triggers
+    #   if: github.event_name == 'pull_request'
+    #   run: |
+    #     echo "COMMIT_SHA=${{ github.event.pull_request.head.sha }}" >> $GITHUB_ENV
+    #     echo "BRANCH=$GITHUB_HEAD_REF" >> $GITHUB_ENV
 
     - name: print variables
       run: |
@@ -25,13 +29,28 @@ jobs:
         echo GITHUB_SHA $GITHUB_SHA
         echo GITHUB_REPOSITORY $GITHUB_REPOSITORY
         echo GITHUB_HEAD_REF $GITHUB_HEAD_REF
+        echo GITHUB_REF_NAME $GITHUB_REF_NAME
         echo COMMIT_SHA $COMMIT_SHA
         echo BRANCH $BRANCH
 
-    - uses: actions/checkout@v3
+    - name: Checkout for PRs
+      if: github.event_name == 'pull_request'
+      uses: actions/checkout@v3
       with:
-        ref: ${{ env.COMMIT_SHA }}
+        ref: ${{ github.event.pull_request.head.sha }}
   
+    - name: Checkout for non-PRs
+      if: github.event_name != 'pull_request'
+      uses: actions/checkout@v3
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
   
+    - name: Docker login, build, deploy
+      run: | 
+
+        getTags () {
+          echo Test
+        }
+
+        getTags
