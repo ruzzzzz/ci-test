@@ -1,5 +1,10 @@
 on:
   workflow_call:
+    inputs:
+      #Lists are not supported, so we have to use a string.
+      tags:
+        required: false
+        type: string
 
 jobs:
   test:
@@ -50,7 +55,7 @@ jobs:
       run: | 
 
         getTags () {
-          echo Test
+          echo ${{ github.event_name }}
         }
 
         getTags
