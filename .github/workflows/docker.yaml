@@ -9,12 +9,14 @@ jobs:
     - name: Set commit SHA for non-PR
       if: github.event_name != 'pull_request'
       run: |
-        echo "COMMIT_SHA=$GITHUB_SHA" >> $GITHUB_ENV
+        echo "COMMIT_SHA=$GITHUB_SHA" >> $GITHUB_ENV 
+        echo "BRANCH=$GITHUB_REF_NAME" >> $GITHUB_ENV
 
     - name: Set commit SHA for PR
       if: github.event_name == 'pull_request'
       run: |
         echo "COMMIT_SHA=${{ github.event.pull_request.head.sha }}" >> $GITHUB_ENV
+        echo "BRANCH=$GITHUB_HEAD_REF" >> $GITHUB_ENV
 
     - name: Docker login, build, push
       run: |
@@ -24,6 +26,7 @@ jobs:
         echo GITHUB_REPOSITORY $GITHUB_REPOSITORY
         echo GITHUB_HEAD_REF $GITHUB_HEAD_REF
         echo COMMIT_SHA $COMMIT_SHA
+        echo BRANCH $BRANCH
 
     - uses: actions/checkout@v3
       with:
